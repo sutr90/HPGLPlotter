@@ -1,5 +1,7 @@
 #include "calibration.h"
+#include "AccelStepper.h"
 #include <avr/sleep.h>
+#include <Arduino.h>
 
 void block() {
     while (Serial.available() == 0) { }
@@ -14,11 +16,11 @@ void runMotor(AccelStepper &stepper, int distance) {
 }
 
 void testRun(AccelStepper &stepper, int distance) {
-    runMotor(s1, 100);
+    runMotor(stepper, distance);
     Serial.println("Please input mms traveled.");
     block();
-    int mils = Serial.parseInt();
-    float steps_in_mm = 100.f / mils;
+    long mils = Serial.parseInt();
+    float steps_in_mm = (float) distance / mils;
     Serial.print("To go 1mm you have to make ");
     Serial.print(steps_in_mm);
     Serial.print(" steps.");
