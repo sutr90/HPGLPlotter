@@ -1,10 +1,11 @@
 #include "calibration.h"
+#include <avr/sleep.h>
 
 void block() {
-    while(Serial.available() == 0){}
+    while (Serial.available() == 0) { }
 }
 
-void runMotor(AccelStepper &stepper, int distance){
+void runMotor(AccelStepper &stepper, int distance) {
     long start = stepper.currentPosition();
     stepper.runToNewPosition(start + 100);
     Serial.println("end reached. going back");
@@ -12,7 +13,7 @@ void runMotor(AccelStepper &stepper, int distance){
     Serial.println("back at start again");
 }
 
-void testRun(AccelStepper &stepper, int distance){
+void testRun(AccelStepper &stepper, int distance) {
     runMotor(s1, 100);
     Serial.println("Please input mms traveled.");
     block();
@@ -24,7 +25,8 @@ void testRun(AccelStepper &stepper, int distance){
 
 }
 
-void calibration(){
+void calibration() {
+    Serial.begin(9600);
     Serial.println("This is calibration routine for HPGL Plotter");
     Serial.println("The motor attached to pins 2,3,4,5");
     Serial.println("will be moved 100, 200 and 300 steps");
@@ -35,4 +37,14 @@ void calibration(){
     testRun(s1, 100);
     testRun(s1, 200);
     testRun(s1, 300);
+
+    s1.disableOutputs();
+
+    Serial.println("Calibration finished. Going to sleep now.");
+
+    delay(100);
+
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    sleep_mode();
 }

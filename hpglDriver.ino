@@ -1,12 +1,9 @@
 #include <Arduino.h>
-#include "HPGLPlotter.h"
-
-HPGLPlotter plotter;
+#include "calibration.h"
 
 void setup(){
-    plotter.init();
+    calibration();
 }
 
 void loop() {
-
 }
