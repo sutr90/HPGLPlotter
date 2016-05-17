@@ -6,9 +6,9 @@
 #define HPGLDRIVER_FUNCTIONS_H
 
 
-#include <Servo/src/Servo.h>
-#include "MultiStepper.h"
-#include "AccelStepper.h"
+#include <Servo.h>
+#include <MultiStepper.h>
+#include <AccelStepper.h>
 
 class HPGLPlotter {
 private:

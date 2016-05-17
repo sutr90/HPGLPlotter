@@ -8,15 +8,24 @@ void block() {
 }
 
 void runMotor(AccelStepper &stepper, int distance) {
-    long start = stepper.currentPosition();
-    stepper.runToNewPosition(start + 100);
-    Serial.println("end reached. going back");
-    stepper.runToNewPosition(start);
-    Serial.println("back at start again");
+    stepper.setCurrentPosition(0);
+    stepper.moveTo(distance);
+    stepper.setMaxSpeed(1000.0);
+    stepper.setAcceleration(512.0);
+    stepper.setSpeed(512.0);
+    while (stepper.distanceToGo() != 0) {
+        stepper.runSpeedToPosition();
+    }
 }
 
 void testRun(AccelStepper &stepper, int distance) {
+    Serial.println("Send S to start");
+    block();
+    stepper.enableOutputs();
+
     runMotor(stepper, distance);
+
+    Serial.println("end reached");
     Serial.println("Please input mms traveled.");
     block();
     long mils = Serial.parseInt();
@@ -25,6 +34,9 @@ void testRun(AccelStepper &stepper, int distance) {
     Serial.print(steps_in_mm);
     Serial.print(" steps.");
 
+    runMotor(stepper, -distance);
+    Serial.println("back at start again");
+    stepper.disableOutputs();
 }
 
 void calibration() {
@@ -34,13 +46,10 @@ void calibration() {
     Serial.println("will be moved 100, 200 and 300 steps");
     Serial.println("in positive direction and then back to original location.");
 
-    AccelStepper s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5);
+    AccelStepper stepper(AccelStepper::HALF4WIRE, 2, 4, 3, 5);
 
-    testRun(s1, 100);
-    testRun(s1, 200);
-    testRun(s1, 300);
-
-    s1.disableOutputs();
+    testRun(stepper, 1000);
+    testRun(stepper, 2000);
 
     Serial.println("Calibration finished. Going to sleep now.");
 
