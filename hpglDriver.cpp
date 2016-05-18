@@ -1,5 +1,7 @@
 #include <Arduino.h>
 
+#define DEBUG 1
+
 #if CALIBRATION
 #include "calibration.h"
 #endif
@@ -7,12 +9,12 @@
 #include "HPGLPlotter.h"
 
 #define BUFFER_SIZE 64
-#define DEBUG 1
-byte buffer[BUFFER_SIZE];
 
-void processCommand(byte *buffer);
+char buffer[BUFFER_SIZE];
 
-long parseInt(byte *buffer, byte **end);
+void processCommand(char *buffer);
+
+long parseInt(char *buffer, char **end);
 
 HPGLPlotter plotter;
 
@@ -21,32 +23,43 @@ void setup() {
     calibration();
 #else
     Serial.begin(9600);
+    Serial.println("This is HPGL Plotter 1.0a");
 #endif
 }
 
+char c, i = 0;
+
 void loop() {
-    byte c, i = 0;
-    while (Serial.available() != 0) {
-        c = (byte) Serial.read();
+
+    if(Serial.available() != 0) {
+        c = (char) Serial.read();
+
+#if DEBUG
+        Serial.println(c);
+#endif
         if (c <= ' ') {
-            continue;
+            return;
         }
 
         buffer[i++] = c;
 
         if (c == ';') {
+#if DEBUG
+            Serial.print("Buffer contains: ");
+            Serial.println(buffer);
+#endif
             processCommand(buffer);
             i = 0;
         }
     }
 }
 
-void processCommand(byte *buffer) {
-    byte *end;
+void processCommand(char *buffer) {
+    char *end;
 
     switch (buffer[1]) {
         case 'N':
-            printf("init\n");
+            plotter.init();
             break;
         case 'P':
             if (buffer[0] == 'I') {
@@ -80,15 +93,14 @@ void processCommand(byte *buffer) {
             break;
         default:
             Serial.print("unknown command ");
-            Serial.print(buffer[0]);
-            Serial.println(buffer[1]);
+            Serial.println(buffer);
     }
 }
 
-long parseInt(byte *buffer, byte **end) {
+long parseInt(char *buffer, char **end) {
     boolean isNegative = false;
     long value = 0;
-    byte c;
+    char c;
     int i = 0;
 
     c = buffer[i];

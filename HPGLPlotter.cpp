@@ -1,5 +1,7 @@
 #include "HPGLPlotter.h"
 
+#define DEBUG 1
+
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
 const float HPGLPlotter::STEPS_PER_MM = 15;
@@ -15,6 +17,9 @@ HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelSt
 }
 
 void HPGLPlotter::init() {
+#if DEBUG
+    Serial.println("init");
+#endif
     penUp();
     goHome(s1);
     goHome(s2);
