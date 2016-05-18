@@ -16,7 +16,7 @@ private:
 
     void goHome(AccelStepper &stepper);
 
-    int P1X, P1Y, P2X, P2Y;
+    long P1X, P1Y, P2X, P2Y;
 
     static const float UNITS_PER_MM;
     static const float STEPS_PER_MM;
@@ -34,8 +34,8 @@ private:
 public:
     HPGLPlotter();
     void init();
-    void boundaries(int x1, int y1, int x2, int y2);
-    void scale(int x1, int y1, int x2, int y2);
+    void boundaries(long x1, long y1, long x2, long y2);
+    void scale(long x1, long y1, long x2, long y2);
     void penUp();
     void penDown();
     void plotAbsolute(long x, long y);

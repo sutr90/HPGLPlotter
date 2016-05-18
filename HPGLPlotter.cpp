@@ -28,14 +28,14 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     stepper.setCurrentPosition(0);
 }
 
-void HPGLPlotter::boundaries(int x1, int y1, int x2, int y2) {
+void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
     P1X = x1;
     P1Y = y1;
     P2X = x2;
     P2Y = y2;
 }
 
-void HPGLPlotter::scale(int x1, int y1, int x2, int y2) {
+void HPGLPlotter::scale(long x1, long y1, long x2, long y2) {
     scaleX = (P1X - P2X) / (float) (x1 - x2);
     scaleY = (P1Y - P2Y) / (float) (y1 - y2);
 }
