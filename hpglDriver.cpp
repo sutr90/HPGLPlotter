@@ -6,7 +6,8 @@
 
 #include "HPGLPlotter.h"
 
-#define BUFFER_SIZE 20
+#define BUFFER_SIZE 64
+#define DEBUG 1
 byte buffer[BUFFER_SIZE];
 
 void processCommand(byte *buffer);
