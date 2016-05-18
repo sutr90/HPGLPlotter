@@ -14,7 +14,7 @@ char buffer[BUFFER_SIZE];
 
 void processCommand(char *buffer);
 
-long parseInt(char *buffer, char **end);
+long parseLong(char *buffer, char **end);
 
 HPGLPlotter plotter;
 
@@ -28,10 +28,11 @@ void setup() {
 }
 
 char c, i = 0;
+long x1, x2, y1, y2;
 
 void loop() {
 
-    if(Serial.available() != 0) {
+    if (Serial.available() != 0) {
         c = (char) Serial.read();
 
 #if DEBUG
@@ -44,10 +45,6 @@ void loop() {
         buffer[i++] = c;
 
         if (c == ';') {
-#if DEBUG
-            Serial.print("Buffer contains: ");
-            Serial.println(buffer);
-#endif
             processCommand(buffer);
             i = 0;
         }
@@ -56,35 +53,38 @@ void loop() {
 
 void processCommand(char *buffer) {
     char *end;
-
     switch (buffer[1]) {
         case 'N':
             plotter.init();
             break;
         case 'P':
             if (buffer[0] == 'I') {
-                plotter.boundaries(parseInt(buffer + 2, &end),
-                                   parseInt(end + 1, &end),
-                                   parseInt(end + 1, &end),
-                                   parseInt(end + 1, &end));
+                x1 = parseLong(buffer + 2, &end);
+                y1 = parseLong(end + 1, &end);
+                x2 = parseLong(end + 1, &end);
+                y2 = parseLong(end + 1, &end);
+                plotter.boundaries(x1, y1, x2, y2);
             }
             break;
         case 'C':
-            plotter.scale(parseInt(buffer + 2, &end),
-                          parseInt(end + 1, &end),
-                          parseInt(end + 1, &end),
-                          parseInt(end + 1, &end));
+            x1 = parseLong(buffer + 2, &end);
+            y1 = parseLong(end + 1, &end);
+            x2 = parseLong(end + 1, &end);
+            y2 = parseLong(end + 1, &end);
+            plotter.scale(x1, y1, x2, y2);
             break;
         case 'U':
             plotter.penUp();
             break;
         case 'A':
-            plotter.plotAbsolute(parseInt(buffer + 2, &end),
-                                 parseInt(end + 1, &end));
+            x1 = parseLong(buffer + 2, &end);
+            y1 = parseLong(end + 1, &end);
+            plotter.plotAbsolute(x1, y1);
             break;
         case 'R':
-            plotter.plotRelative(parseInt(buffer + 2, &end),
-                                 parseInt(end + 1, &end));
+            x1 = parseLong(buffer + 2, &end);
+            y1 = parseLong(end + 1, &end);
+            plotter.plotRelative(x1, y1);
             break;
         case 'D':
             plotter.penDown();
@@ -97,7 +97,7 @@ void processCommand(char *buffer) {
     }
 }
 
-long parseInt(char *buffer, char **end) {
+long parseLong(char *buffer, char **end) {
     boolean isNegative = false;
     long value = 0;
     char c;
@@ -108,7 +108,7 @@ long parseInt(char *buffer, char **end) {
     do {
         if (c == '-')
             isNegative = true;
-        else if (c >= '0' && c <= '9')        // is c a digit?
+        else if (c >= '0' && c <= '9')
             value = value * 10 + c - '0';
         i++;
         c = buffer[i];
