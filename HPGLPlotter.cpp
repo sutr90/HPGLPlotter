@@ -29,6 +29,17 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
 }
 
 void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
+#if DEBUG
+    Serial.print("boundaries");
+    Serial.print(x1);
+    Serial.print(",");
+    Serial.print(y1);
+    Serial.print(",");
+    Serial.print(x2);
+    Serial.print(",");
+    Serial.println(y2);
+#endif
+
     P1X = x1;
     P1Y = y1;
     P2X = x2;
@@ -36,19 +47,42 @@ void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
 }
 
 void HPGLPlotter::scale(long x1, long y1, long x2, long y2) {
+#if DEBUG
+    Serial.print("scale");
+    Serial.print(x1);
+    Serial.print(",");
+    Serial.print(y1);
+    Serial.print(",");
+    Serial.print(x2);
+    Serial.print(",");
+    Serial.println(y2);
+#endif
+
     scaleX = (P1X - P2X) / (float) (x1 - x2);
     scaleY = (P1Y - P2Y) / (float) (y1 - y2);
 }
 
 void HPGLPlotter::penUp() {
+#if DEBUG
+    Serial.println("penup");
+#endif
     s.write(0);
 }
 
 void HPGLPlotter::penDown() {
+#if DEBUG
+    Serial.println("pendown");
+#endif
     s.write(135);
 }
 
 void HPGLPlotter::plotAbsolute(long x, long y) {
+#if DEBUG
+    Serial.print("plotAbsolute");
+    Serial.print(x);
+    Serial.print(",");
+    Serial.println(y);
+#endif
     //input in user units
     position[0] = convertUserUnitsToSteps(x, scaleX);
     position[1] = convertUserUnitsToSteps(y, scaleY);
@@ -56,6 +90,12 @@ void HPGLPlotter::plotAbsolute(long x, long y) {
 }
 
 void HPGLPlotter::plotRelative(long deltaX, long deltaY) {
+#if DEBUG
+    Serial.print("plotAbsolute");
+    Serial.print(deltaX);
+    Serial.print(",");
+    Serial.println(deltaY);
+#endif
     //input in user units
     position[0] += convertUserUnitsToSteps(deltaX, scaleX);
     position[1] += convertUserUnitsToSteps(deltaY, scaleY);
