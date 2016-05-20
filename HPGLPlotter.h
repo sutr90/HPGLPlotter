@@ -40,6 +40,8 @@ public:
     void penDown();
     void plotAbsolute(long x, long y);
     void plotRelative(long deltaX, long deltaY);
+
+    void resetPositons();
 };
 
 #endif //HPGLDRIVER_FUNCTIONS_H

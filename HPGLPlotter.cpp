@@ -4,16 +4,22 @@
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
-const float HPGLPlotter::STEPS_PER_MM = 15;
+const float HPGLPlotter::STEPS_PER_MM = 333;
 
 HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 8, 10, 9, 11), ms(),
                              s() {
-    s1.setMaxSpeed(100);
-    s2.setMaxSpeed(100);
+
+    s1.setMaxSpeed(1000);
+    s2.setMaxSpeed(1000);
+
+    s1.setAcceleration(1000.0);
+    s1.setSpeed(1000.0);
+
+    s2.setAcceleration(1000.0);
+    s2.setSpeed(1000.0);
 
     ms.addStepper(s1);
     ms.addStepper(s2);
-    s.attach(6);
 }
 
 void HPGLPlotter::init() {
@@ -23,6 +29,7 @@ void HPGLPlotter::init() {
     penUp();
     goHome(s1);
     goHome(s2);
+    resetPositons();
 }
 
 void HPGLPlotter::goHome(AccelStepper &stepper) {
@@ -30,7 +37,6 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
         stepper.move(-5);
     }
     stepper.move(5);
-    stepper.setCurrentPosition(0);
 }
 
 void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
@@ -132,3 +138,13 @@ long HPGLPlotter::convertUserUnitsToSteps(long user_units, float scale) {
     float mils = (user_units * scale) / UNITS_PER_MM;
     return (long) (mils * STEPS_PER_MM);
 }
+
+void HPGLPlotter::resetPositons() {
+    s1.setCurrentPosition(0);
+    s2.setCurrentPosition(0);
+
+    position[0] = 0;
+    position[1] = 0;
+}
+
+
