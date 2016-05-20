@@ -71,14 +71,22 @@ void HPGLPlotter::penUp() {
 #if DEBUG
     Serial.println("penup");
 #endif
+    //TODO: replace with config pin
+    s.attach(10);
     s.write(0);
+    delay(150);
+    s.detach();
 }
 
 void HPGLPlotter::penDown() {
 #if DEBUG
     Serial.println("pendown");
 #endif
-    s.write(135);
+    //TODO: replace with config pin
+    s.attach(10);
+    s.write(75);
+    delay(150);
+    s.detach();
 }
 
 void HPGLPlotter::plotAbsolute(long x, long y) {
