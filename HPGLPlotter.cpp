@@ -4,7 +4,7 @@
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
-const float HPGLPlotter::STEPS_PER_MM = 333;
+const long HPGLPlotter::STEPS_PER_MM = 333;
 
 HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 8, 10, 9, 11), ms(),
                              s() {
@@ -20,6 +20,9 @@ HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelSt
 
     ms.addStepper(s1);
     ms.addStepper(s2);
+
+    //setup endswitch pins
+    pinMode(12, INPUT_PULLUP);
 }
 
 void HPGLPlotter::init() {
@@ -33,10 +36,21 @@ void HPGLPlotter::init() {
 }
 
 void HPGLPlotter::goHome(AccelStepper &stepper) {
-    while (!endSwitch()) {
-        stepper.move(-5);
+    //move to zero until end switch is hit
+    while(!endSwitch()){
+        stepper.move(-STEPS_PER_MM);
+        stepper.setSpeed(200);
+        while(stepper.distanceToGo() > 0){
+            stepper.runSpeedToPosition();
+        }
     }
-    stepper.move(5);
+
+    //back off a bit
+    stepper.move(STEPS_PER_MM);
+    stepper.setSpeed(200);
+    while(stepper.distanceToGo() > 0){
+        stepper.runSpeedToPosition();
+    }
 }
 
 void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
@@ -123,7 +137,7 @@ void HPGLPlotter::plotRelative(long deltaX, long deltaY) {
 
 bool HPGLPlotter::endSwitch() {
     //TODO: define proper end switch
-    return digitalRead(12) == HIGH;
+    return digitalRead(12) == LOW;
 }
 
 void HPGLPlotter::updateMotors() {

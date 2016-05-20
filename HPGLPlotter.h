@@ -19,7 +19,7 @@ private:
     long P1X, P1Y, P2X, P2Y;
 
     static const float UNITS_PER_MM;
-    static const float STEPS_PER_MM;
+    static const long STEPS_PER_MM;
     float scaleX;
     float scaleY;
 
