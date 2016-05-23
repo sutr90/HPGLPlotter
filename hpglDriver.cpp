@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #if CALIBRATION
 #include "calibration.h"
@@ -25,6 +25,8 @@ void setup() {
     Serial.begin(9600);
     Serial.println("This is HPGL Plotter 1.0a");
 #endif
+
+    Serial.print("READY$");
 }
 
 char c, i = 0;
@@ -46,6 +48,7 @@ void loop() {
 
         if (c == ';') {
             processCommand(buffer);
+            Serial.print("ACK$");
             i = 0;
         }
     }

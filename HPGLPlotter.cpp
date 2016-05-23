@@ -1,6 +1,6 @@
 #include "HPGLPlotter.h"
 
-#define DEBUG 1
+#define DEBUG 0
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
