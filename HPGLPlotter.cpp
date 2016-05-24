@@ -36,19 +36,25 @@ void HPGLPlotter::init() {
 }
 
 void HPGLPlotter::goHome(AccelStepper &stepper) {
+#if DEBUG
+    Serial.println("go home");
+#endif
     //move to zero until end switch is hit
     while(!endSwitch()){
-        stepper.move(-STEPS_PER_MM);
+#if DEBUG
+        Serial.println("homing");
+#endif
+        stepper.move(STEPS_PER_MM);
         stepper.setSpeed(200);
-        while(stepper.distanceToGo() > 0){
+        while(stepper.distanceToGo() != 0){
             stepper.runSpeedToPosition();
         }
     }
 
     //back off a bit
-    stepper.move(STEPS_PER_MM);
+    stepper.move(-4*STEPS_PER_MM);
     stepper.setSpeed(200);
-    while(stepper.distanceToGo() > 0){
+    while(stepper.distanceToGo() != 0){
         stepper.runSpeedToPosition();
     }
 }
