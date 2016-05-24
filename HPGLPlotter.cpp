@@ -44,19 +44,24 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
 #if DEBUG
         Serial.println("homing");
 #endif
-        stepper.move(STEPS_PER_MM);
-        stepper.setSpeed(200);
+        stepper.move(-STEPS_PER_MM/2);
+        stepper.setSpeed(400);
         while(stepper.distanceToGo() != 0){
+            if(endSwitch()) {
+                break;
+            }
             stepper.runSpeedToPosition();
         }
     }
 
     //back off a bit
-    stepper.move(-4*STEPS_PER_MM);
+    stepper.move(4*STEPS_PER_MM);
     stepper.setSpeed(200);
     while(stepper.distanceToGo() != 0){
         stepper.runSpeedToPosition();
     }
+
+    stepper.disableOutputs();
 }
 
 void HPGLPlotter::boundaries(long x1, long y1, long x2, long y2) {
@@ -91,6 +96,12 @@ void HPGLPlotter::scale(long x1, long y1, long x2, long y2) {
 
     scaleX = (P1X - P2X) / (float) (x1 - x2);
     scaleY = (P1Y - P2Y) / (float) (y1 - y2);
+#if DEBUG
+    Serial.print("scale");
+    Serial.print(scaleX);
+    Serial.print(",");
+    Serial.println(scaleY);
+#endif
 }
 
 void HPGLPlotter::penUp() {
@@ -116,15 +127,20 @@ void HPGLPlotter::penDown() {
 }
 
 void HPGLPlotter::plotAbsolute(long x, long y) {
+    //input in user units
+    position[0] = convertUserUnitsToSteps(x, scaleX);
+    position[1] = convertUserUnitsToSteps(y, scaleY);
+
 #if DEBUG
     Serial.print("plotAbsolute");
     Serial.print(x);
     Serial.print(",");
     Serial.println(y);
+    Serial.print(position[0]);
+    Serial.print(",");
+    Serial.println(position[1]);
 #endif
-    //input in user units
-    position[0] = convertUserUnitsToSteps(x, scaleX);
-    position[1] = convertUserUnitsToSteps(y, scaleY);
+
     updateMotors();
 }
 
