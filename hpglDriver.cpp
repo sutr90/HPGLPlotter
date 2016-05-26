@@ -48,6 +48,8 @@ void loop() {
 
         if (c == ';') {
             processCommand(buffer);
+            plotter.shutdown();
+            delay(300);
             Serial.print("ACK$");
             i = 0;
         }

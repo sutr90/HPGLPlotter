@@ -31,6 +31,7 @@ private:
     bool endSwitch();
     void updateMotors();
     long convertUserUnitsToSteps(long user_units, float scale);
+
 public:
     HPGLPlotter();
     void init();
@@ -42,6 +43,8 @@ public:
     void plotRelative(long deltaX, long deltaY);
 
     void resetPositons();
+
+    void shutdown();
 };
 
 #endif //HPGLDRIVER_FUNCTIONS_H

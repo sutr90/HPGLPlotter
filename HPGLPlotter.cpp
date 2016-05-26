@@ -6,17 +6,14 @@ const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
 const long HPGLPlotter::STEPS_PER_MM = 333;
 
-HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 8, 10, 9, 11), ms(),
+HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 6, 8, 7, 9), ms(),
                              s() {
 
-    s1.setMaxSpeed(1000);
-    s2.setMaxSpeed(1000);
+    s1.setMaxSpeed(500);
+    s2.setMaxSpeed(500);
 
     s1.setAcceleration(1000.0);
-    s1.setSpeed(1000.0);
-
     s2.setAcceleration(1000.0);
-    s2.setSpeed(1000.0);
 
     ms.addStepper(s1);
     ms.addStepper(s2);
@@ -183,4 +180,7 @@ void HPGLPlotter::resetPositons() {
     position[1] = 0;
 }
 
-
+void HPGLPlotter::shutdown() {
+    s1.disableOutputs();
+    s2.disableOutputs();
+}
