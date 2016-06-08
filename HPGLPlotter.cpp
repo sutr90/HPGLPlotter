@@ -4,7 +4,7 @@
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
-const long HPGLPlotter::STEPS_PER_MM = 333;
+const long HPGLPlotter::STEPS_PER_MM = 270;
 
 HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 6, 8, 7, 9), ms(),
                              s() {
@@ -107,7 +107,7 @@ void HPGLPlotter::penUp() {
 #endif
     //TODO: replace with config pin
     s.attach(10);
-    s.write(0);
+    s.write(70);
     delay(150);
     s.detach();
 }
@@ -118,7 +118,7 @@ void HPGLPlotter::penDown() {
 #endif
     //TODO: replace with config pin
     s.attach(10);
-    s.write(75);
+    s.write(15);
     delay(150);
     s.detach();
 }
