@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #define DEBUG 0
-#define CALIBRATION 1
+#define CALIBRATION 0
 
 #if CALIBRATION
 #include "calibration.h"
