@@ -13,7 +13,7 @@ void runMotor(AccelStepper &stepper, int distance) {
     stepper.moveTo(distance);
     stepper.setMaxSpeed(1000.0);
     stepper.setAcceleration(1000.0);
-    stepper.setSpeed(1000.0);
+    stepper.setSpeed(400.0);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
@@ -44,13 +44,14 @@ void calibration() {
     Serial.begin(115200);
     Serial.println("This is calibration routine for HPGL Plotter");
     Serial.println("The motor attached to pins 2,3,4,5");
-    Serial.println("will be moved 100, 200 and 300 steps");
+    Serial.println("will be moved 1000, 2000 and 3000 steps");
     Serial.println("in positive direction and then back to original location.");
 
     AccelStepper stepper(AccelStepper::HALF4WIRE, 2, 4, 3, 5);
 
-    testRun(stepper, 3000);
+    testRun(stepper, 1000);
     testRun(stepper, 2000);
+    testRun(stepper, 3000);
 
     Serial.println("Calibration finished. Going to sleep now.");
 
