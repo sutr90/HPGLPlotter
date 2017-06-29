@@ -4,13 +4,13 @@
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
-const long HPGLPlotter::STEPS_PER_MM = 270;
-
-HPGLPlotter::HPGLPlotter() : s1(AccelStepper::HALF4WIRE, 2, 4, 3, 5), s2(AccelStepper::HALF4WIRE, 6, 8, 7, 9), ms(),
+const long HPGLPlotter::STEPS_PER_MM = 67;
+// AccelStepper::DRIVER, stepPin, directionPin
+HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3), s2(AccelStepper::DRIVER, 4, 5), ms(),
                              s() {
 
-    s1.setMaxSpeed(500);
-    s2.setMaxSpeed(500);
+    s1.setMaxSpeed(1000);
+    s2.setMaxSpeed(1000);
 
     s1.setAcceleration(1000.0);
     s2.setAcceleration(1000.0);
@@ -37,14 +37,14 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     Serial.println("go home");
 #endif
     //move to zero until end switch is hit
-    while(!endSwitch()){
+    while (!endSwitch()) {
 #if DEBUG
         Serial.println("homing");
 #endif
-        stepper.move(-STEPS_PER_MM/2);
+        stepper.move(-STEPS_PER_MM / 2);
         stepper.setSpeed(400);
-        while(stepper.distanceToGo() != 0){
-            if(endSwitch()) {
+        while (stepper.distanceToGo() != 0) {
+            if (endSwitch()) {
                 break;
             }
             stepper.runSpeedToPosition();
@@ -52,9 +52,9 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     }
 
     //back off a bit
-    stepper.move(4*STEPS_PER_MM);
+    stepper.move(4 * STEPS_PER_MM);
     stepper.setSpeed(200);
-    while(stepper.distanceToGo() != 0){
+    while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
 

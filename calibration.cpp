@@ -43,11 +43,11 @@ void testRun(AccelStepper &stepper, int distance) {
 void calibration() {
     Serial.begin(9600);
     Serial.println("This is calibration routine for HPGL Plotter");
-    Serial.println("The motor attached to pins 2,3,4,5");
+    Serial.println("The motor attached to pins 2,3");
     Serial.println("will be moved 1000, 2000 and 3000 steps");
     Serial.println("in positive direction and then back to original location.");
 
-    AccelStepper stepper(AccelStepper::HALF4WIRE, 2, 4, 3, 5);
+    AccelStepper stepper(AccelStepper::DRIVER, 2, 3);
 
     testRun(stepper, 1000);
     testRun(stepper, 2000);
