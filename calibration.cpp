@@ -13,7 +13,7 @@ void runMotor(AccelStepper &stepper, int distance) {
     stepper.moveTo(distance);
     stepper.setMaxSpeed(10000.0);
     stepper.setAcceleration(10000.0);
-    stepper.setSpeed(9600.0);//TODO 3200
+    stepper.setSpeed(9600.0);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }

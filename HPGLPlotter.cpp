@@ -1,25 +1,30 @@
+#include "configuration.h"
 #include "HPGLPlotter.h"
 
 #define DEBUG 0
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
-//TODO: move to config
-const long HPGLPlotter::STEPS_PER_MM = 100;
+
 // AccelStepper::DRIVER, stepPin, directionPin
 HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
-                             s2(AccelStepper::DRIVER, 4, 5),
+                             s2(AccelStepper::DRIVER, 5, 6),
                              ms(), s() {
-    s1.setMaxSpeed(10000);
-    s2.setMaxSpeed(10000);
-// TODO set speed in 3200-6400 range, with 1/8 step mode
-    s1.setAcceleration(1000.0);
-    s2.setAcceleration(1000.0);
+    s1.setEnablePin(5);
+    s2.setEnablePin(7);
+
+    //todo invert?
+//    s1.setPinsInverted(false, false, true)
+//    s2.setPinsInverted(false, false, true)
+
+    s1.setMaxSpeed(MOTOR_SPEED);
+    s2.setMaxSpeed(MOTOR_SPEED);
+    s1.setAcceleration(MOTOR_SPEED);
+    s2.setAcceleration(MOTOR_SPEED);
 
     ms.addStepper(s1);
     ms.addStepper(s2);
 
-    //setup endswitch pins
-    pinMode(12, INPUT_PULLUP);
+    pinMode(END_SWITCH_PIN, INPUT_PULLUP);
 }
 
 void HPGLPlotter::init() {
@@ -105,9 +110,8 @@ void HPGLPlotter::penUp() {
 #if DEBUG
     Serial.println("penup");
 #endif
-    //TODO: replace with config pin
-    s.attach(10);
-    s.write(70);
+    s.attach(SERVO_PIN);
+    s.write(SERVO_UP_POSITION);
     delay(150);
     s.detach();
 }
@@ -116,9 +120,8 @@ void HPGLPlotter::penDown() {
 #if DEBUG
     Serial.println("pendown");
 #endif
-    //TODO: replace with config pin
-    s.attach(10);
-    s.write(15);
+    s.attach(SERVO_PIN);
+    s.write(SERVO_DOWN_POSITION);
     delay(150);
     s.detach();
 }
@@ -155,8 +158,7 @@ void HPGLPlotter::plotRelative(long deltaX, long deltaY) {
 }
 
 bool HPGLPlotter::endSwitch() {
-    //TODO: define proper end switch
-    return digitalRead(12) == LOW;
+    return digitalRead(END_SWITCH_PIN) == LOW;
 }
 
 void HPGLPlotter::updateMotors() {
