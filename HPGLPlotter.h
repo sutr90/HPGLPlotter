@@ -1,7 +1,3 @@
-//
-// Created by VF on 15. 5. 2016.
-//
-
 #ifndef HPGLDRIVER_FUNCTIONS_H
 #define HPGLDRIVER_FUNCTIONS_H
 

@@ -10,4 +10,6 @@ const static unsigned char SERVO_DOWN_POSITION = 40;
 
 const static unsigned char END_SWITCH_PIN = 12;
 
+#define DEBUG 0
+
 #endif //HPGLDRIVER_CONFIGURATION_H

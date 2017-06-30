@@ -1,6 +1,6 @@
 #include <Arduino.h>
+#include "configuration.h"
 
-#define DEBUG 0
 #define CALIBRATION 0
 
 #if CALIBRATION

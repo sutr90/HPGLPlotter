@@ -1,8 +1,6 @@
 #include "configuration.h"
 #include "HPGLPlotter.h"
 
-#define DEBUG 0
-
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 
 // AccelStepper::DRIVER, stepPin, directionPin
