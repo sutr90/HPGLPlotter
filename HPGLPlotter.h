@@ -39,7 +39,8 @@ public:
 
     void resetPositons();
 
-    void shutdown();
+    void disable();
+    void enable();
 };
 
 #endif //HPGLDRIVER_FUNCTIONS_H

@@ -24,10 +24,11 @@ void setup() {
     calibration();
 #else
     Serial.begin(9600);
-    Serial.println("This is HPGL Plotter 1.0a");
+    Serial.println("This is HPGL Plotter 1.1");
 #endif
 
     Serial.print("READY$");
+    plotter.disable();
 }
 
 char c, i = 0;
@@ -38,9 +39,6 @@ void loop() {
     if (Serial.available() != 0) {
         c = (char) Serial.read();
 
-#if DEBUG
-        Serial.println(c);
-#endif
         if (c <= ' ') {
             return;
         }
@@ -48,8 +46,12 @@ void loop() {
         buffer[i++] = c;
 
         if (c == ';') {
+        #if DEBUG
+            Serial.println(buffer);
+        #endif
+            plotter.enable();
             processCommand(buffer);
-            plotter.shutdown();
+            plotter.disable();
             delay(300);
             Serial.print("ACK$");
             i = 0;
@@ -118,8 +120,7 @@ long parseLong(char *buffer, char **end) {
             value = value * 10 + c - '0';
         i++;
         c = buffer[i];
-    }
-    while ((c >= '0' && c <= '9'));
+    } while ((c >= '0' && c <= '9'));
 
     *end = buffer + i;
 

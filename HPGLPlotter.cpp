@@ -7,12 +7,11 @@ const float HPGLPlotter::UNITS_PER_MM = 40.f;
 HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
                              s2(AccelStepper::DRIVER, 5, 6),
                              ms(), s() {
-    s1.setEnablePin(5);
+    s1.setEnablePin(4);
     s2.setEnablePin(7);
 
-    //todo invert?
-//    s1.setPinsInverted(false, false, true)
-//    s2.setPinsInverted(false, false, true)
+    s1.setPinsInverted(false, false, true);
+    s2.setPinsInverted(false, false, true);
 
     s1.setMaxSpeed(MOTOR_SPEED);
     s2.setMaxSpeed(MOTOR_SPEED);
@@ -45,7 +44,7 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
         Serial.println("homing");
 #endif
         stepper.move(-STEPS_PER_MM / 2);
-        stepper.setSpeed(400);
+        stepper.setSpeed(1200);
         while (stepper.distanceToGo() != 0) {
             if (endSwitch()) {
                 break;
@@ -55,7 +54,7 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     }
 
     //back off a bit
-    stepper.move(4 * STEPS_PER_MM);
+    stepper.move(2 * STEPS_PER_MM);
     stepper.setSpeed(200);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
@@ -181,7 +180,12 @@ void HPGLPlotter::resetPositons() {
     position[1] = 0;
 }
 
-void HPGLPlotter::shutdown() {
+void HPGLPlotter::disable() {
     s1.disableOutputs();
     s2.disableOutputs();
+}
+
+void HPGLPlotter::enable() {
+    s1.enableOutputs();
+    s2.enableOutputs();
 }
