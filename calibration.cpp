@@ -11,9 +11,9 @@ void block() {
 void runMotor(AccelStepper &stepper, int distance) {
     stepper.setCurrentPosition(0);
     stepper.moveTo(distance);
-    stepper.setMaxSpeed(1000.0);
-    stepper.setAcceleration(1000.0);
-    stepper.setSpeed(400.0);
+    stepper.setMaxSpeed(10000.0);
+    stepper.setAcceleration(10000.0);
+    stepper.setSpeed(9600.0);//TODO 3200
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }

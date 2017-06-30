@@ -4,14 +4,14 @@
 
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 //TODO: move to config
-const long HPGLPlotter::STEPS_PER_MM = 67;
+const long HPGLPlotter::STEPS_PER_MM = 100;
 // AccelStepper::DRIVER, stepPin, directionPin
-HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3), s2(AccelStepper::DRIVER, 4, 5), ms(),
-                             s() {
-
-    s1.setMaxSpeed(1000);
-    s2.setMaxSpeed(1000);
-
+HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
+                             s2(AccelStepper::DRIVER, 4, 5),
+                             ms(), s() {
+    s1.setMaxSpeed(10000);
+    s2.setMaxSpeed(10000);
+// TODO set speed in 3200-6400 range, with 1/8 step mode
     s1.setAcceleration(1000.0);
     s2.setAcceleration(1000.0);
 
@@ -160,6 +160,7 @@ bool HPGLPlotter::endSwitch() {
 }
 
 void HPGLPlotter::updateMotors() {
+    //TODO set proper speed for each stepper
     // position in steps
     ms.moveTo(position);
     ms.runSpeedToPosition();
