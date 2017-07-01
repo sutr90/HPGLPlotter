@@ -15,8 +15,8 @@ HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
 
     s1.setMaxSpeed(MOTOR_SPEED);
     s2.setMaxSpeed(MOTOR_SPEED);
-    s1.setAcceleration(MOTOR_SPEED);
-    s2.setAcceleration(MOTOR_SPEED);
+    s1.setAcceleration(MOTOR_SPEED*3);
+    s2.setAcceleration(MOTOR_SPEED*3);
 
     ms.addStepper(s1);
     ms.addStepper(s2);
@@ -54,8 +54,8 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     }
 
     //back off a bit
-    stepper.move(2 * STEPS_PER_MM);
-    stepper.setSpeed(200);
+    stepper.move(2*STEPS_PER_MM);
+    stepper.setSpeed(1200);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
