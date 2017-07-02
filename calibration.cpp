@@ -11,20 +11,22 @@ void block() {
 }
 
 void runMotor(AccelStepper &stepper, int distance) {
+    stepper.enableOutputs();
+
     stepper.setCurrentPosition(0);
     stepper.moveTo(distance);
     stepper.setMaxSpeed(10000.0);
     stepper.setAcceleration(10000.0);
-    stepper.setSpeed(9600.0);
+    stepper.setSpeed(3200.0);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
+    stepper.disableOutputs();
 }
 
 void testRun(AccelStepper &stepper, int distance) {
     Serial.println("Send S to start");
     block();
-    stepper.enableOutputs();
 
     runMotor(stepper, distance);
 
@@ -39,14 +41,13 @@ void testRun(AccelStepper &stepper, int distance) {
 
     runMotor(stepper, -distance);
     Serial.println("back at start again");
-    stepper.disableOutputs();
 }
 
 void calibration() {
     Serial.begin(9600);
     Serial.println("This is calibration routine for HPGL Plotter");
-    Servo servo1;
 #if CALIBRATION == 2
+    Servo servo1;
     Serial.println("The servo is attached to pin 9");
     servo1.attach(9);
     while (true) {
@@ -62,6 +63,8 @@ void calibration() {
     Serial.println("in positive direction and then back to original location.");
 
     AccelStepper stepper(AccelStepper::DRIVER, 2, 3);
+    stepper.setEnablePin(4);
+    stepper.setPinsInverted(false, false, true);
 
     testRun(stepper, 1000);
     testRun(stepper, 2000);

@@ -161,7 +161,6 @@ bool HPGLPlotter::endSwitch() {
 }
 
 void HPGLPlotter::updateMotors() {
-    //TODO set proper speed for each stepper
     // position in steps
     ms.moveTo(position);
     ms.runSpeedToPosition();
