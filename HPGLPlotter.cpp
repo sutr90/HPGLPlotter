@@ -10,7 +10,7 @@ HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
     s1.setEnablePin(4);
     s2.setEnablePin(7);
 
-    s1.setPinsInverted(false, false, true);
+    s1.setPinsInverted(true, false, true);
     s2.setPinsInverted(false, false, true);
 
     s1.setMaxSpeed(MOTOR_SPEED);
@@ -109,6 +109,8 @@ void HPGLPlotter::penUp() {
 #endif
     s.attach(SERVO_PIN);
     s.write(SERVO_UP_POSITION);
+    delay(150);
+    s.write(SERVO_UP_POSITION - SERVO_RELIEF); // back off a bit to release the tension
     delay(150);
     s.detach();
 }
