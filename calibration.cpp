@@ -1,11 +1,13 @@
+#include "configuration.h"
 #include "calibration.h"
 #include <AccelStepper.h>
 #include <avr/sleep.h>
+#include <Servo.h>
 
 void block() {
     Serial.flush();
     Serial.readString();
-    while (Serial.available() == 0) { }
+    while (Serial.available() == 0) {}
 }
 
 void runMotor(AccelStepper &stepper, int distance) {
@@ -43,6 +45,18 @@ void testRun(AccelStepper &stepper, int distance) {
 void calibration() {
     Serial.begin(9600);
     Serial.println("This is calibration routine for HPGL Plotter");
+    Servo servo1;
+#if CALIBRATION == 2
+    Serial.println("The servo is attached to pin 9");
+    servo1.attach(9);
+    while (true) {
+        Serial.println("input the desired servo position:");
+        block();
+        long v = Serial.parseInt();
+        servo1.write(v);
+        delay(15);
+    }
+#else
     Serial.println("The motor attached to pins 2,3");
     Serial.println("will be moved 1000, 2000 and 3000 steps");
     Serial.println("in positive direction and then back to original location.");
@@ -52,7 +66,7 @@ void calibration() {
     testRun(stepper, 1000);
     testRun(stepper, 2000);
     testRun(stepper, 3000);
-
+#endif
     Serial.println("Calibration finished. Going to sleep now.");
 
     delay(100);

@@ -1,8 +1,6 @@
 #include <Arduino.h>
 #include "configuration.h"
 
-#define CALIBRATION 0
-
 #if CALIBRATION
 #include "calibration.h"
 #endif
