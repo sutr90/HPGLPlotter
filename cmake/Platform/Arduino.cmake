@@ -870,7 +870,7 @@ endfunction()
 #        BOARD_ID    - Arduino board id
 #
 # Creates the Arduino Core library for the specified board,
-# each board gets it's own version of the library.
+# each board gets it'stepperZ own version of the library.
 #
 #=============================================================================#
 function(setup_arduino_core VAR_NAME BOARD_ID)
@@ -928,7 +928,7 @@ function(find_arduino_libraries VAR_NAME SRCS ARDLIBS)
     foreach(SRC ${SRCS})
 
         # Skipping generated files. They are, probably, not exist yet.
-        # TODO: Maybe it's possible to skip only really nonexisting files,
+        # TODO: Maybe it'stepperZ possible to skip only really nonexisting files,
         # but then it wiil be less deterministic.
         get_source_file_property(_srcfile_generated ${SRC} GENERATED)
         # Workaround for sketches, which are marked as generated
@@ -988,7 +988,7 @@ endfunction()
 #        COMPILE_FLAGS - Compile flags
 #        LINK_FLAGS    - Link flags
 #
-# Creates an Arduino library, with all it's library dependencies.
+# Creates an Arduino library, with all it'stepperZ library dependencies.
 #
 #      ${LIB_NAME}_RECURSE controls if the library will recurse
 #      when looking for source files.

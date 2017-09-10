@@ -4,22 +4,28 @@
 const float HPGLPlotter::UNITS_PER_MM = 40.f;
 
 // AccelStepper::DRIVER, stepPin, directionPin
-HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
-                             s2(AccelStepper::DRIVER, 5, 6),
-                             ms(), s() {
-    s1.setEnablePin(4);
-    s2.setEnablePin(7);
+HPGLPlotter::HPGLPlotter() : stepperX(AccelStepper::DRIVER, X_STEP, X_DIR),
+                             stepperY(AccelStepper::DRIVER, Y_STEP, Y_DIR),
+                             stepperZ(AccelStepper::DRIVER, Z_STEP, Z_DIR),
+                             multiStepper() {
+    stepperX.setPinsInverted(X_DIR_INVERTED, false, true);
+    stepperY.setPinsInverted(Y_DIR_INVERTED, false, true);
+    stepperZ.setPinsInverted(Z_DIR_INVERTED, false, true);
 
-    s1.setPinsInverted(true, false, true);
-    s2.setPinsInverted(false, false, true);
+    stepperX.setSpeed(MOTOR_SPEED_X);
+//    stepperX.setMaxSpeed(MOTOR_SPEED_X);
+    stepperX.setAcceleration(MOTOR_SPEED_X);
 
-    s1.setMaxSpeed(MOTOR_SPEED);
-    s2.setMaxSpeed(MOTOR_SPEED);
-    s1.setAcceleration(MOTOR_SPEED);
-    s2.setAcceleration(MOTOR_SPEED);
+    stepperY.setSpeed(MOTOR_SPEED_Y);
+//    stepperY.setMaxSpeed(MOTOR_SPEED_Y);
+    stepperY.setAcceleration(MOTOR_SPEED_Y);
 
-    ms.addStepper(s1);
-    ms.addStepper(s2);
+    stepperZ.setSpeed(MOTOR_SPEED_Z);
+//    stepperZ.setMaxSpeed(MOTOR_SPEED_Z);
+    stepperZ.setAcceleration(MOTOR_SPEED_Z);
+
+    multiStepper.addStepper(stepperX);
+    multiStepper.addStepper(stepperY);
 
     pinMode(END_SWITCH_PIN, INPUT_PULLUP);
 }
@@ -28,23 +34,24 @@ void HPGLPlotter::init() {
 #if DEBUG
     Serial.println("init");
 #endif
-    penUp();
-    goHome(s1);
-    goHome(s2);
+    // Z has to be initialized first, to lift the pen from the paper
+    goHome(stepperZ, "Z");
+    goHome(stepperX, "X");
+    goHome(stepperY, "Y");
     resetPositons();
 }
 
-void HPGLPlotter::goHome(AccelStepper &stepper) {
+void HPGLPlotter::goHome(AccelStepper &stepper, const char *name) {
 #if DEBUG
     Serial.println("go home");
 #endif
     //move to zero until end switch is hit
     while (!endSwitch()) {
 #if DEBUG
-        Serial.println("homing");
+        Serial.print("homing ");
+        Serial.println(name);
 #endif
         stepper.move(-STEPS_PER_MM / 2);
-        stepper.setSpeed(1200);
         while (stepper.distanceToGo() != 0) {
             if (endSwitch()) {
                 break;
@@ -54,8 +61,7 @@ void HPGLPlotter::goHome(AccelStepper &stepper) {
     }
 
     //back off a bit
-    stepper.move(2*STEPS_PER_MM);
-    stepper.setSpeed(1200);
+    stepper.move(2 * STEPS_PER_MM);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
@@ -107,22 +113,16 @@ void HPGLPlotter::penUp() {
 #if DEBUG
     Serial.println("penup");
 #endif
-    s.attach(SERVO_PIN);
-    s.write(SERVO_UP_POSITION);
-    delay(150);
-    s.write(SERVO_UP_POSITION - SERVO_RELIEF); // back off a bit to release the tension
-    delay(150);
-    s.detach();
+    stepperZ.moveTo(0);
+    stepperZ.runSpeedToPosition();
 }
 
 void HPGLPlotter::penDown() {
 #if DEBUG
     Serial.println("pendown");
 #endif
-    s.attach(SERVO_PIN);
-    s.write(SERVO_DOWN_POSITION);
-    delay(150);
-    s.detach();
+    stepperZ.moveTo(Z_CONTACT_STEPS);
+    stepperZ.runSpeedToPosition();
 }
 
 void HPGLPlotter::plotAbsolute(long x, long y) {
@@ -162,8 +162,8 @@ bool HPGLPlotter::endSwitch() {
 
 void HPGLPlotter::updateMotors() {
     // position in steps
-    ms.moveTo(position);
-    ms.runSpeedToPosition();
+    multiStepper.moveTo(position);
+    multiStepper.runSpeedToPosition();
 }
 
 long HPGLPlotter::convertUserUnitsToSteps(long user_units, float scale) {
@@ -174,19 +174,22 @@ long HPGLPlotter::convertUserUnitsToSteps(long user_units, float scale) {
 }
 
 void HPGLPlotter::resetPositons() {
-    s1.setCurrentPosition(0);
-    s2.setCurrentPosition(0);
+    stepperX.setCurrentPosition(0);
+    stepperY.setCurrentPosition(0);
+    stepperZ.setCurrentPosition(0);
 
     position[0] = 0;
     position[1] = 0;
 }
 
 void HPGLPlotter::disable() {
-    s1.disableOutputs();
-    s2.disableOutputs();
+    stepperX.disableOutputs();
+    stepperY.disableOutputs();
+    stepperZ.disableOutputs();
 }
 
 void HPGLPlotter::enable() {
-    s1.enableOutputs();
-    s2.enableOutputs();
+    stepperX.enableOutputs();
+    stepperY.enableOutputs();
+    stepperZ.enableOutputs();
 }

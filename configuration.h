@@ -2,16 +2,27 @@
 #define HPGLDRIVER_CONFIGURATION_H
 
 const static long STEPS_PER_MM = 100;
-const static long MOTOR_SPEED = 3200; // up to 9600; motor has to be in 1/8 step mode
 
-const static unsigned char SERVO_PIN = 9;
-const static unsigned char SERVO_UP_POSITION = 90;
-const static unsigned char SERVO_DOWN_POSITION = 30;
-const static signed char SERVO_RELIEF = ((SERVO_UP_POSITION - SERVO_DOWN_POSITION) / 10) +1;
+const static long MOTOR_SPEED_X = 600;
+const static long MOTOR_SPEED_Y = 600;
+const static long MOTOR_SPEED_Z = 400;
+
+const static bool X_DIR_INVERTED = true;
+const static long X_STEP = 6;
+const static long X_DIR = 7;
+
+const static bool Y_DIR_INVERTED = false;
+const static long Y_STEP = 4;
+const static long Y_DIR = 5;
+
+const static bool Z_DIR_INVERTED = false;
+const static long Z_STEP = 2;
+const static long Z_DIR = 3;
+const static long Z_CONTACT_STEPS = 100;
 
 const static unsigned char END_SWITCH_PIN = 12;
 
-#define DEBUG 0
-#define CALIBRATION 1
+#define DEBUG 1
+#define CALIBRATION 0
 
 #endif //HPGLDRIVER_CONFIGURATION_H

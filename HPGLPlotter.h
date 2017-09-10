@@ -1,8 +1,6 @@
 #ifndef HPGLDRIVER_FUNCTIONS_H
 #define HPGLDRIVER_FUNCTIONS_H
 
-
-#include <Servo.h>
 #include <MultiStepper.h>
 #include <AccelStepper.h>
 
@@ -10,7 +8,7 @@ class HPGLPlotter {
 private:
     long position[2];
 
-    void goHome(AccelStepper &stepper);
+    void goHome(AccelStepper &stepper, const char *name);
 
     long P1X, P1Y, P2X, P2Y;
 
@@ -18,10 +16,10 @@ private:
     float scaleX = 1.0f;
     float scaleY = 1.0f;
 
-    Servo s;
-    MultiStepper ms;
-    AccelStepper s1;
-    AccelStepper s2;
+    MultiStepper multiStepper;
+    AccelStepper stepperX;
+    AccelStepper stepperY;
+    AccelStepper stepperZ;
 
     bool endSwitch();
     void updateMotors();
