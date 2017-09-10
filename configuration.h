@@ -18,7 +18,7 @@ const static long Y_DIR = 5;
 const static bool Z_DIR_INVERTED = false;
 const static long Z_STEP = 2;
 const static long Z_DIR = 3;
-const static long Z_CONTACT_STEPS = 100;
+const static long Z_DOWN_POSITION = 15 * STEPS_PER_MM;
 
 const static unsigned char END_SWITCH_PIN = 12;
 

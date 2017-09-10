@@ -31,8 +31,8 @@ void HPGLPlotter::init() {
 #endif
     // Z has to be initialized first, to lift the pen from the paper
     goHome(stepperZ, "Z");
-//    goHome(stepperX, "X");
-//    goHome(stepperY, "Y");
+    goHome(stepperX, "X");
+    goHome(stepperY, "Y");
     resetPositons();
 }
 
@@ -111,15 +111,21 @@ void HPGLPlotter::penUp() {
     Serial.println("penup");
 #endif
     stepperZ.moveTo(0);
-    stepperZ.runSpeedToPosition();
+    stepperZ.setSpeed(MOTOR_SPEED_Z);
+    while (stepperZ.distanceToGo() != 0) {
+        stepperZ.runSpeedToPosition();
+    }
 }
 
 void HPGLPlotter::penDown() {
 #if DEBUG
     Serial.println("pendown");
 #endif
-    stepperZ.moveTo(Z_CONTACT_STEPS);
-    stepperZ.runSpeedToPosition();
+    stepperZ.moveTo(Z_DOWN_POSITION);
+    stepperZ.setSpeed(MOTOR_SPEED_Z);
+    while (stepperZ.distanceToGo() != 0) {
+        stepperZ.runSpeedToPosition();
+    }
 }
 
 void HPGLPlotter::plotAbsolute(long x, long y) {
