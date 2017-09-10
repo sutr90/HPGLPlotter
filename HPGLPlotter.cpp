@@ -13,16 +13,11 @@ HPGLPlotter::HPGLPlotter() : stepperX(AccelStepper::DRIVER, X_STEP, X_DIR),
     stepperZ.setPinsInverted(Z_DIR_INVERTED, false, true);
 
     stepperX.setSpeed(MOTOR_SPEED_X);
-//    stepperX.setMaxSpeed(MOTOR_SPEED_X);
-    stepperX.setAcceleration(MOTOR_SPEED_X);
-
+    stepperX.setMaxSpeed(MOTOR_SPEED_X);
     stepperY.setSpeed(MOTOR_SPEED_Y);
-//    stepperY.setMaxSpeed(MOTOR_SPEED_Y);
-    stepperY.setAcceleration(MOTOR_SPEED_Y);
-
+    stepperY.setMaxSpeed(MOTOR_SPEED_Y);
     stepperZ.setSpeed(MOTOR_SPEED_Z);
-//    stepperZ.setMaxSpeed(MOTOR_SPEED_Z);
-    stepperZ.setAcceleration(MOTOR_SPEED_Z);
+    stepperZ.setMaxSpeed(MOTOR_SPEED_Z);
 
     multiStepper.addStepper(stepperX);
     multiStepper.addStepper(stepperY);
@@ -36,8 +31,8 @@ void HPGLPlotter::init() {
 #endif
     // Z has to be initialized first, to lift the pen from the paper
     goHome(stepperZ, "Z");
-    goHome(stepperX, "X");
-    goHome(stepperY, "Y");
+//    goHome(stepperX, "X");
+//    goHome(stepperY, "Y");
     resetPositons();
 }
 
@@ -52,6 +47,7 @@ void HPGLPlotter::goHome(AccelStepper &stepper, const char *name) {
         Serial.println(name);
 #endif
         stepper.move(-STEPS_PER_MM / 2);
+        stepper.setSpeed(400); // this is important!! move() resets the current speed
         while (stepper.distanceToGo() != 0) {
             if (endSwitch()) {
                 break;
@@ -62,6 +58,7 @@ void HPGLPlotter::goHome(AccelStepper &stepper, const char *name) {
 
     //back off a bit
     stepper.move(2 * STEPS_PER_MM);
+    stepper.setSpeed(400);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }

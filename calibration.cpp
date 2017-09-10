@@ -58,11 +58,11 @@ void calibration() {
         delay(15);
     }
 #else
-    Serial.println("The motor attached to pins 2,3");
+    Serial.println("The motor attached to pins 6, 7");
     Serial.println("will be moved 1000, 2000 and 3000 steps");
     Serial.println("in positive direction and then back to original location.");
 
-    AccelStepper stepper(AccelStepper::DRIVER, 2, 3);
+    AccelStepper stepper(AccelStepper::DRIVER, 6, 7);
 
     testRun(stepper, 1000);
     testRun(stepper, 2000);
