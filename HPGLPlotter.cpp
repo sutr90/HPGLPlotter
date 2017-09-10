@@ -15,8 +15,8 @@ HPGLPlotter::HPGLPlotter() : s1(AccelStepper::DRIVER, 2, 3),
 
     s1.setMaxSpeed(MOTOR_SPEED);
     s2.setMaxSpeed(MOTOR_SPEED);
-    s1.setAcceleration(MOTOR_SPEED*3);
-    s2.setAcceleration(MOTOR_SPEED*3);
+    s1.setAcceleration(MOTOR_SPEED);
+    s2.setAcceleration(MOTOR_SPEED);
 
     ms.addStepper(s1);
     ms.addStepper(s2);

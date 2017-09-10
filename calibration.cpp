@@ -17,7 +17,7 @@ void runMotor(AccelStepper &stepper, int distance) {
     stepper.moveTo(distance);
     stepper.setMaxSpeed(10000.0);
     stepper.setAcceleration(10000.0);
-    stepper.setSpeed(3200.0);
+    stepper.setSpeed(400.0);
     while (stepper.distanceToGo() != 0) {
         stepper.runSpeedToPosition();
     }
@@ -63,8 +63,6 @@ void calibration() {
     Serial.println("in positive direction and then back to original location.");
 
     AccelStepper stepper(AccelStepper::DRIVER, 2, 3);
-    stepper.setEnablePin(4);
-    stepper.setPinsInverted(false, false, true);
 
     testRun(stepper, 1000);
     testRun(stepper, 2000);
